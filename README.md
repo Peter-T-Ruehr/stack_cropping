@@ -15,5 +15,5 @@ To use the macro,
 Please cite the following paper when you use this macro:
 Rühr et al. (in rev.): Juvenile ecology drives adult morphology in two insect orders.
 
-
+References:
 [1] Schindelin J et al. 2012 Fiji: an open-source platform for biological-image analysis. Nat. Methods 9, 676–682. (doi:10.1038/nmeth.2019)

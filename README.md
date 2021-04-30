@@ -2,10 +2,10 @@
 Fiji [1] macro that crops any given image stack without having to load it into memory first.
 
 Additional features:
- *   - user defined rotation around the z-axis of the stack
- *   - creation of log file with ROI-coordinates and rotation angle for reproducible results
- *   - optional contrast enhancement
- *   
+ * user defined rotation around the z-axis of the stack
+ * creation of log file with ROI-coordinates and rotation angle for reproducible results
+ * optional contrast enhancement
+
  *   Should run on Linux, Win & iOS.
 
 To use the macro, either 

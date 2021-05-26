@@ -1,4 +1,4 @@
-# Stack cropping macro for Fiji
+# Stack cropping macro for Imagej/Fiji
 Imagej [1] / Fiji [2] macro that crops any given image stack without having to load it into memory first.
 
 Features:

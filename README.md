@@ -1,5 +1,5 @@
 # Stack cropping macro for Fiji
-Fiji [1] macro that crops any given image stack without having to load it into memory first.
+Imagej [1] / Fiji [2] macro that crops any given image stack without having to load it into memory first.
 
 Features:
  * Region of interest (ROI) definition in image stack of any size
@@ -18,4 +18,6 @@ Please cite the following paper when you use this macro:
 Rühr et al. (in press.): Juvenile ecology drives adult morphology in two insect orders. Proc. B.
 
 References:
-[1] Schindelin J et al. 2012 Fiji: an open-source platform for biological-image analysis. Nat. Methods 9, 676–682. (doi:10.1038/nmeth.2019)
+[1] Schneider, C. A., Rasband, W. S., & Eliceiri, K. W. (2012). NIH Image to ImageJ: 25 years of image analysis. Nature Methods, 9, 671–675. (doi: 10.1038/nmeth.2089)
+
+[2] Schindelin J et al. 2012 Fiji: an open-source platform for biological-image analysis. Nat. Methods 9, 676–682. (doi: 10.1038/nmeth.2019)

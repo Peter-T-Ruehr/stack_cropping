@@ -107,6 +107,8 @@ Dialog.addMessage("___________________________________");
 	Dialog.addCheckbox("Enhance contrast?", true);
 	Dialog.addNumber("Saturated pixels after contr. enh.:", 0.00001, 5, 6, "%")
 	Dialog.addMessage("___________________________________");
+	Dialog.addCheckbox("Save as 8-bit?", true);
+	Dialog.addMessage("___________________________________");
 	Dialog.addString("Input format: ", ".tif", 5);
 	Dialog.addMessage("___________________________________");
 	Dialog.addCheckbox("Save full sized stack in addition to downsampled stack?", false);
@@ -120,17 +122,18 @@ Dialog.addMessage("___________________________________");
 	specimen_name = Dialog.getString();
 	crop_xy = Dialog.getCheckbox();
 	crop_z = Dialog.getCheckbox();
-	crop_rot = Dialog.getCheckbox();
+	rot = Dialog.getCheckbox();
 	ROI_name = Dialog.getString();
 	d_size = Dialog.getNumber()/1024;  //MB/1024=GB
+	bit8 = Dialog.getCheckbox();
 	enhance_contrast = Dialog.getCheckbox();
 	enhance_contrast_saturation = Dialog.getNumber();
 	format_in = Dialog.getString();
 	save_as_stack = Dialog.getCheckbox;
 	print("Working on "+" "+specimen_name+"...");
 
-if(crop_rot == true){
-	crop_xy = true;
+if(rot == true){
+	//crop_xy = true;
 }
 
 //define output directory
@@ -152,7 +155,7 @@ while(File.exists(target_dir)){
 
 
 //DO THIS IF CROPPING AND ROTATING:
-if(crop_rot==true){
+if(rot==true){
 	//draw first line defining anterior and fronterior edges along the axis
 	setTool("line");
 	waitForUser("1) Draw a line from the fronterior/dorsal edge to the posterior/ventral edge of the sample along its axis\n    with the line selection tool to define upper and lower ROI borders and the rotation angle.\n2) AFTERWARDS, click 'Ok'."); 
@@ -169,13 +172,16 @@ if(crop_rot==true){
 	print("Roation angle alpha = "+alpha+'°');
 	beta = 360-alpha; //because imageJ rotates clockwise which is mirrored to mathematical standard
 	run("Select None");
-	
-	//draw second line to define lateral edges; axis doesn't matter now
-	waitForUser("1) Draw a line from one side of the sample to the other with the line selection tool\n     to define third and fourth ROI borders. Angle and order of slecection do not matter here.\n2) AFTERWARDS, click 'Ok'."); 
-	getSelectionCoordinates(v,w);
-	print("left and right:");
-	for(i=0;i<v.length;i++){
-		print(v[i]+"/"+w[i]);
+
+	// skip 2nd line definition if no cropping in x & y is desired
+	if(crop_xy == true){
+		//draw second line to define lateral edges; axis doesn't matter now
+		waitForUser("1) Draw a line from one side of the sample to the other with the line selection tool\n     to define third and fourth ROI borders. Angle and order of slecection do not matter here.\n2) AFTERWARDS, click 'Ok'."); 
+		getSelectionCoordinates(v,w);
+		print("left and right:");
+		for(i=0;i<v.length;i++){
+			print(v[i]+"/"+w[i]);
+		}
 	}
 }
 
@@ -235,85 +241,88 @@ error_flag = false;
 
 line_rot_calc_flag = false;
 
-if(crop_xy){
-	else{
-		print("Closing preview image...");
-		run("Close");
-		print("Loading stack into memory...");
-		run("Image Sequence...", "open="+source_dir+" file=tif starting="+first_image+" number="+last_image-first_image+1+" sort");
-	
-		
-		if(enhance_contrast == true){
-			print("Enhancing contrast (", enhance_contrast_saturation,"% sat.)...");
-			run("Enhance Contrast...", "saturated="+enhance_contrast_saturation+" process_all use");
+//if(crop_xy==true){
+print("Closing preview image...");
+run("Close");
+print("Loading stack into memory...");
+run("Image Sequence...", "open="+source_dir+" file=tif starting="+first_image+" number="+last_image-first_image+1+" sort");
+
+
+if(enhance_contrast == true){
+	print("Enhancing contrast (", enhance_contrast_saturation,"% sat.)...");
+	run("Enhance Contrast...", "saturated="+enhance_contrast_saturation+" process_all use");
+}
+
+if(rot==true){
+	//rotate image
+	run("Select None");
+	print("1st Rotation...");
+	run("Rotate... ", "angle="+alpha+" grid=1 interpolation=Bicubic enlarge stack");
+
+	// skip next steps if no cropping in x & y is desired
+	if(crop_xy == true){
+		//calculate rotation <-- this must be done here, because the function needs the dimensions of the image after enlargement of rotated image 
+		if(line_rot_calc_flag==false){
+			line_strich_AB = rotate_line(beta,x,y);
+			line_strich_CD = rotate_line(beta,v,w);
+			print("Calculated scaled carthesian rotation!");
+			print("************************************");
 		}
 	
-		if(crop_rot==true){
-			//rotate image
-			run("Select None");
-			print("1st Rotation...");
-			run("Rotate... ", "angle="+alpha+" grid=1 interpolation=Bicubic enlarge stack");
-	
-			//calculate rotation <-- this must be done here, because the function needs the dimensions of the image after enlargement of rotated image 
-			if(line_rot_calc_flag==false){
-				line_strich_AB = rotate_line(beta,x,y);
-				line_strich_CD = rotate_line(beta,v,w);
-				print("Calculated scaled carthesian rotation!");
-				print("************************************");
-			}
-	
-			if(line_rot_calc_flag == false){
-				upper_Lx = line_strich_AB[0];
-				upper_Ly = line_strich_CD[3];
-				width = line_strich_AB[2]-line_strich_AB[0];
-				height = line_strich_CD[1]-line_strich_CD[3];
-	
-				if (height<0){
-					upper_Lx = line_strich_AB[0];
-					upper_Ly = line_strich_CD[1];
-					height = line_strich_CD[3]-line_strich_CD[1];
-					print("Width defined from right to left.");
-				}
-				else{
-					print("Width defined from left to right.");
-				}
-				print("************************************");
-				print("Rotated rectangle will be drawn as follows");
-				print('upper_Lx = '+upper_Lx);
-				print('upper_Ly = '+upper_Ly);
-				print('width = '+width);
-				print('height = '+height);
-				print('after image rotation of '+alpha+'°');
-				print("************************************");
-				line_rot_calc_flag = true;
-			}
+		if(line_rot_calc_flag == false){
+			upper_Lx = line_strich_AB[0];
+			upper_Ly = line_strich_CD[3];
+			width = line_strich_AB[2]-line_strich_AB[0];
+			height = line_strich_CD[1]-line_strich_CD[3];
 			
-			makeRectangle(upper_Lx, upper_Ly, width, height);
-			//waitForUser("ok");
-			print("Cropping...");
-			run("Crop");
+			if (height<0){
+				upper_Lx = line_strich_AB[0];
+				upper_Ly = line_strich_CD[1];
+				height = line_strich_CD[3]-line_strich_CD[1];
+				print("Width defined from right to left.");
+			}
+			else{
+				print("Width defined from left to right.");
+			}
 			print("************************************");
-		}
-		else if(crop_xy == true){
-			makeSelection("polygon", x, y);
-			print("Cropping...");
-			run("Crop");
+			print("Rotated rectangle will be drawn as follows");
+			print('upper_Lx = '+upper_Lx);
+			print('upper_Ly = '+upper_Ly);
+			print('width = '+width);
+			print('height = '+height);
+			print('after image rotation of '+alpha+'°');
 			print("************************************");
+			line_rot_calc_flag = true;
 		}
-		run("Properties...", "unit=um pixel_width="+px_size+" pixel_height="+px_size+" voxel_depth="+px_size);
-		print("2nd Rotation...");
-		run("Rotate 90 Degrees Left");
+		
+		makeRectangle(upper_Lx, upper_Ly, width, height);
+		//waitForUser("ok");
+		print("Cropping...");
+		run("Crop");
 		print("************************************");
-		//*************
 	}
 }
+else if(crop_xy == true){
+	makeSelection("polygon", x, y);
+	print("Cropping...");
+	run("Crop");
+	print("************************************");
+}
+run("Properties...", "unit=um pixel_width="+px_size+" pixel_height="+px_size+" voxel_depth="+px_size);
+if(rot==true){
+	print("2nd Rotation...");
+	run("Rotate 90 Degrees Left");
+}
+print("************************************");
+
+//}
 
 number_output_images = last_image-first_image; //must count files instead because if z cropping is deactivated, these numbers don't exist
 
 print("Image transformations done!");
 print("************************************");
 
-if (bitDepth() != 8){
+if (bitDepth() != 8 && bit8 == true){
 	print("************************************");
 	print("Converting to 8-bit...");
 	run("8-bit");
@@ -331,7 +340,7 @@ if(save_as_stack == true){
 	
 	run("Image Sequence... ", "format=TIFF save="+target_dir_final+dir_sep+specimen_name+"_"+ROI_name+"_.tif");
 	
-	print("Stack images saved as 8bits. (location: "+target_dir_final+")");
+	print("Stack images saved at "+target_dir_final+".");
 	print("************************************");
 	final_stack_name = "full";
 }
@@ -339,7 +348,7 @@ if(save_as_stack == true){
 // calculate if scaling is necessary later
 Stack.getDimensions(width_orig, height_orig, channels, slices, frames);
 o_size = width_orig*height_orig*slices/(1024*1024*1024);
-print("New stack size: "+o_size/1024+" MB.");
+print("New stack size: "+o_size*1024+" MB.");
 d = pow(d_size/o_size,1/3);
 perc_d = round(100 * d);
 d = perc_d/100;
@@ -347,35 +356,18 @@ d = perc_d/100;
 if(perc_d < 100){
 	print("Scaling stack to "+perc_d+"% to reach stack size of ~"+d_size+" GB...");
 	run("Scale...", "x="+d+" y="+d+" z="+d+" interpolation=Bicubic average process create");
-	getPixelSize(unit_, px_size, ph, pd);
-	print("New px size = "+px_size+" um.");
-	
-	//Create target directory to save full-sized stack images in
-	print("Creating new directory...");
-	target_dir_final = target_dir+dir_sep+specimen_name+"_"+ROI_name+"_red"+perc_d;
-	File.makeDirectory(target_dir_final);
-	
-	run("Image Sequence... ", "format=TIFF save="+target_dir_final+dir_sep+specimen_name+"_"+ROI_name+"_red"+perc_d+"_.tif");
+	getPixelSize(unit_, px_size_new, ph, pd);
+	print("New px size = "+px_size_new+" um.");
+	run("Image Sequence... ", "format=TIFF name="+specimen_name+"_"+ROI_name+"_red"+perc_d+"_ save="+target_dir+dir_sep+specimen_name+"_"+ROI_name+"_red"+perc_d+"_.tif");
 }
 else{
 	print("No scaling necessary; stack is already smaller than "+d_size+" GB.");
-	if(save_as_stack == true){
-		print("************************************");
-		print("Stack is already saved in "+target_dir_final+".");
-	}
-	else{
-		print("************************************");
-		//Create target directory to save full-sized stack images in
-		print("Creating new directory...");
-		target_dir_final = target_dir+dir_sep+specimen_name+"_"+ROI_name+"_full_size";
-		File.makeDirectory(target_dir_final);
-		
-		run("Image Sequence... ", "format=TIFF save="+target_dir_final+dir_sep+specimen_name+"_"+ROI_name+"_.tif");
-		
-		print("Stack images saved in: "+target_dir_final+")");
-	}
+	px_size_new = px_size;
 	print("************************************");
+	run("Image Sequence... ", "format=TIFF name="+specimen_name+"_"+ROI_name+"_ save="+target_dir+dir_sep+specimen_name+"_"+ROI_name+"_.tif");
 }
+print("Stack images saved in: "+target_dir+".");
+print("************************************");
 
 //close();
 //--------------------------------------
@@ -388,37 +380,29 @@ total_time = ROI_def_ex_time+ex_time;
 print("************************************");
 print("Creating ROI coordinate file ("+ROI_log_file+")...");
 open_log_file = File.open(log_dir_path+dir_sep+ROI_log_file);
-if(crop_rot == true){
-	print(open_log_file, "crop_rot");
-	print(open_log_file, "px_size");
-	print(open_log_file, px_size);
-	print(open_log_file, "z1");
-	print(open_log_file, first_image);
-	print(open_log_file, "z2");
-	print(open_log_file, last_image);
-	print(open_log_file, "AB1x");
-	print(open_log_file, line_strich_AB[0]);
-	print(open_log_file, "AB1y");
-	print(open_log_file, line_strich_AB[1]);
-	print(open_log_file, "AB2x");
-	print(open_log_file, line_strich_AB[2]);
-	print(open_log_file, "AB2y");
-	print(open_log_file, line_strich_AB[3]);
-	print(open_log_file, "CD1x");
-	print(open_log_file, line_strich_CD[0]);
-	print(open_log_file, "CD1y");
-	print(open_log_file, line_strich_CD[1]);
-	print(open_log_file, "CD2x");
-	print(open_log_file, line_strich_CD[2]);
-	print(open_log_file, "CD2y");
-	print(open_log_file, line_strich_CD[3]);
-	print(open_log_file, "alpha");
-	print(open_log_file, alpha);
-	print(open_log_file, "ROI_def_time");
-	print(open_log_file, ROI_def_ex_time);
-	print(open_log_file, "ex_time");
-	print(open_log_file, ex_time);
+print(open_log_file, "varibale, value");
+print(open_log_file, "px_size_original,"+ px_size);
+print(open_log_file, "px_size_ROI,"+ px_size_new);
+if(bit8 == true){	print(open_log_file, "8bit,true");}
+else {print(open_log_file, "8bit,false");}
+print(open_log_file, "z1,"+first_image);
+print(open_log_file, "z2,"+last_image);
+if(rot==true){
+	print(open_log_file, "AB1x,"+x[0]); // line_strich_AB[0]
+	print(open_log_file, "AB1y,"+y[0]); // line_strich_AB[1]
+	print(open_log_file, "AB2x,"+x[1]); // line_strich_AB[2]
+	print(open_log_file, "AB2y,"+y[1]); // line_strich_AB[3]
 }
+if(rot==true && crop_xy == true){
+	print(open_log_file, "CD1x,"+v[0]); // line_strich_CD[0]
+	print(open_log_file, "CD1y,"+w[0]); // line_strich_CD[1]
+	print(open_log_file, "CD2x,"+v[1]); // line_strich_CD[2]
+	print(open_log_file, "CD2y,"+w[1]); // line_strich_CD[3]
+	print(open_log_file, "alpha,"+alpha);
+}
+print(open_log_file, "ROI_def_time,"+ROI_def_ex_time);
+print(open_log_file, "execution_time,"+ex_time);
+
 
 File.close(open_log_file)
 print("************************************");
@@ -426,7 +410,7 @@ run("Close All");
 
 setBatchMode(false);
 
-open(target_dir_final,"virtual");
+open(target_dir,"virtual");
 
 beep();
 print("************************************");

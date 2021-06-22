@@ -15,7 +15,7 @@ To use the macro,
   - or store a copy of the \*.ijm- file in the "Macros" folder (./Fiji.app/plugins/Macros). If the file name ends with an underscore (e.g. stack_cropping_1-0-0_.ijm), the macro will be available from the Fiji menu at "Plugins > Macros > stack cropping 1-0-0" after the next restart of Fiji.
 
 Please cite the following paper when you use this macro:
-Rühr et al. (in press.): Juvenile ecology drives adult morphology in two insect orders. Proc. B.
+Rühr et al. (2021): Juvenile ecology drives adult morphology in two insect orders. Proceedings of the Royal Society B 288: 20210616. https://doi.org/10.1098/rspb.2021.0616
 
 References:
 [1] Schneider, C. A., Rasband, W. S., & Eliceiri, K. W. (2012). NIH Image to ImageJ: 25 years of image analysis. Nature Methods, 9, 671–675. (doi: 10.1038/nmeth.2089)

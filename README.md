@@ -1,4 +1,7 @@
 # Stack cropping macro for Imagej/Fiji
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5482982.svg)](https://doi.org/10.5281/zenodo.5482982)
+
 Imagej [1] / Fiji [2] macro that crops any given image stack without having to load it into memory first.
 
 Features:

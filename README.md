@@ -8,8 +8,7 @@
  * user defined rotation of the ROI around the z-axis of the stack
  * creation of log file with ROI-coordinates and rotation angle for reproducible results
  * optional contrast enhancement
-
- *   Should run on Linux, Win & iOS.
+ * Should run on Linux, Win & iOS.
 
 ### Usage
   * either drag and drop the \*.ijm- file into the Fiji main window and click "Run" or press Ctrl+R on your keyboard

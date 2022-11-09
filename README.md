@@ -1,4 +1,4 @@
-# Stack cropping macro for Imagej/Fiji
+# Stack cropping and rotation macro for Imagej/Fiji
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5482982.svg)](https://doi.org/10.5281/zenodo.5482982)
 
@@ -20,8 +20,8 @@ To use the macro,
 Please cite the following paper when you use this macro:
 Rühr et al. (2021): Juvenile ecology drives adult morphology in two insect orders. Proceedings of the Royal Society B 288: 20210616. https://doi.org/10.1098/rspb.2021.0616
 
-There is a version for general use (./stack_cropping_.ijm) are two development-versions of the main script (./IEZ/ROI_cropping_devel_1_.ijm, ./IEZ/ROI_cropping_devel_2_.ijm) that automatically detect µCT-scans from 
-  * KIT Light Source (aka ANKA) of the Karlsruher Institut für Technologie (KIT) (from different file structures of different scan times)
+There is a version for general use (./stack_cropping_.ijm) and two development-versions of the cropping script (./IEZ/ROI_cropping_devel_1_.ijm, ./IEZ/ROI_cropping_devel_2_.ijm) that automatically detect µCT-scans from 
+  * TOPOTOMO beamline of KIT Light Source (aka ANKA) at the Karlsruher Institut für Technologie (KIT) (from different file structures of different scan times)
   * p05 beamline run by Helmholtz-Zentrum hereon at DESY, Germany (from different file structures of different scan times)
   * TOMCAT beamline at Swiss Light Source (SLS), PSI, Switzerland
   * Pheoneix naotome run by Helmholtz-Zentrum hereon at Deutsches Elektronen Synchrotron (DESY), Germany

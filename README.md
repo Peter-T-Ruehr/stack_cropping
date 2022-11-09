@@ -20,6 +20,14 @@ To use the macro,
 Please cite the following paper when you use this macro:
 Rühr et al. (2021): Juvenile ecology drives adult morphology in two insect orders. Proceedings of the Royal Society B 288: 20210616. https://doi.org/10.1098/rspb.2021.0616
 
+There is a version for general use (./stack_cropping_.ijm) are two development-versions of the main script (./IEZ/ROI_cropping_devel_1_.ijm, ./IEZ/ROI_cropping_devel_2_.ijm) that automatically detect µCT-scans from 
+  * KIT Light Source (aka ANKA) of the Karlsruher Institut für Technologie (KIT) (from different file structures of different scan times)
+  * p05 beamline run by Helmholtz-Zentrum hereon at DESY, Germany (from different file structures of different scan times)
+  * TOMCAT beamline at Swiss Light Source (SLS), PSI, Switzerland
+  * Pheoneix naotome run by Helmholtz-Zentrum hereon at Deutsches Elektronen Synchrotron (DESY), Germany
+  * Bruker Skyscan 1272 run by Institute of Evolutionary Biology (IEZ), Germany
+Note that files and folder strcutures may have changed over the years, so script might work for all scans - these scripts are designed for in-house use and will be updated according to in-house needs.
+
 References:
 [1] Schneider, C. A., Rasband, W. S., & Eliceiri, K. W. (2012). NIH Image to ImageJ: 25 years of image analysis. Nature Methods, 9, 671–675. (doi: 10.1038/nmeth.2089)
 

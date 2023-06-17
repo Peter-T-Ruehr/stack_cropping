@@ -12,11 +12,12 @@
 
 ### Usage
   * either drag and drop the \*.ijm- file into the Fiji main window and click "Run" or press Ctrl+R on your keyboard
-  * or store a copy of the \*.ijm- file in the "Macros" folder (./Fiji.app/plugins/Macros). If the file name ends with an underscore (e.g. stack_cropping_1-0-0_.ijm), the macro will be available from the Fiji menu at "Plugins > Macros > stack cropping 1-0-0" after the next restart of Fiji.
+  * or store a copy of the \*.ijm- file in the "Macros" folder (./Fiji.app/plugins/Macros). If the file name ends with an underscore (e.g. stack_cropping_1-1-0_.ijm), the macro will be available from the Fiji menu at "Plugins > Macros > stack cropping 1-1-0" after the next restart of Fiji.
 
 ### Citation
 Please cite the following paper when you use this macro:
-Rühr et al. (2021): Juvenile ecology drives adult morphology in two insect orders. Proceedings of the Royal Society B 288: 20210616. https://doi.org/10.1098/rspb.2021.0616
+
+Rühr et al. (**2021**): Juvenile ecology drives adult morphology in two insect orders. *Proceedings of the Royal Society B* **288*: 20210616. https://doi.org/10.1098/rspb.2021.0616
 
 ### General and in-house (development) versions
 There is a version for general use ([./stack_cropping_.ijm](https://github.com/Peter-T-Ruehr/stack_cropping/blob/main/stack_cropping_.ijm)) and two development-versions of the cropping script ([./IEZ/ROI_cropping_devel_1_.ijm](https://github.com/Peter-T-Ruehr/stack_cropping/blob/main/IEZ/ROI_cropping_devel_1_.ijm), [./IEZ/ROI_cropping_devel_2_.ijm](https://github.com/Peter-T-Ruehr/stack_cropping/blob/main/IEZ/ROI_cropping_devel_2_.ijm)). The latter two automatically detect scan details (e.g., pixel size) from (SR)µCT-scans and their log-files of the following sources:

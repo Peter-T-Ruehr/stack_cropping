@@ -12,7 +12,7 @@
 
 ### Usage
   * either drag and drop the \*.ijm- file into the Fiji main window and click "Run" or press Ctrl+R on your keyboard
-  * or store a copy of the \*.ijm- file in the "Macros" folder (./Fiji.app/plugins/Macros). If the file name ends with an underscore (e.g. stack_cropping_1-1-0_.ijm), the macro will be available from the Fiji menu at "Plugins > Macros > stack cropping 1-1-0" after the next restart of Fiji.
+  * or store a copy of the \*.ijm- file in the "Macros" folder (./Fiji.app/plugins/Macros). If the file name ends with an underscore (e.g. stack_cropping_.ijm), the macro will be available from the Fiji menu at "Plugins > Macros > stack cropping" after the next restart of Fiji.
 
 ### Citation
 Please cite the following paper when you use this macro:

@@ -10,7 +10,8 @@
  *   v. 1.1.0
  *   
  *   Please cite the following paper when you use this macro:
- *   Rühr et al. (in rev.): Juvenile ecology drives adult morphology in two insect orders.
+ *   Rühr et al. (2021): Juvenile ecology drives adult morphology in two insect orders. 
+ *   Proceedings of the Royal Society B 288: 20210616. https://doi.org/10.1098/rspb.2021.0616
  *   
  *  BSD 3-Clause License
  *  Copyright (c) 2021-2023, Peter-T-Ruehr

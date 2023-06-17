@@ -7,13 +7,13 @@
  *   
  *   Should run on Linux, Win & iOS.
  *   
- *   v. 1.0.0
+ *   v. 1.1.0
  *   
  *   Please cite the following paper when you use this macro:
  *   Rühr et al. (in rev.): Juvenile ecology drives adult morphology in two insect orders.
  *   
  *  BSD 3-Clause License
- *  Copyright (c) 2021, Peter-T-Ruehr
+ *  Copyright (c) 2021-2023, Peter-T-Ruehr
  *  All rights reserved.
  */
 
@@ -99,7 +99,7 @@ Dialog.addMessage("___________________________________");
 	Dialog.addCheckbox("Crop region of interest (ROI) in x and y?", true);
 	Dialog.addCheckbox("Crop region of interest (ROI) in z?", true);
 	Dialog.addCheckbox("Define rotated ROI?*", true);
-	Dialog.addString("Name of ROI:", "ROI");
+	Dialog.addString("Name of ROI:", "ROI_name");
 	Dialog.addMessage("___________________________________");
 	Dialog.addMessage("Current stack size: "+stack_size+" GB");
 	Dialog.addNumber("Scale to: ", 280, 0, 5, "MB");
@@ -111,7 +111,7 @@ Dialog.addMessage("___________________________________");
 	Dialog.addMessage("___________________________________");
 	Dialog.addString("Input format: ", ".tif", 5);
 	Dialog.addMessage("___________________________________");
-	Dialog.addCheckbox("Save full sized stack in addition to downsampled stack?", false);
+	Dialog.addCheckbox("Save full sized stack in addition to downsampled stack?", true);
 	Dialog.addMessage("___________________________________");
 	Dialog.addMessage("___________________________________");
 	Dialog.addMessage("* If this option is checked, a ROI definition in x and y will be done\n  even if it is unchecked above because the rotation angle\n  is calculated from the ROI definition in x and y.");
@@ -338,7 +338,7 @@ if(save_as_stack == true){
 	target_dir_final = target_dir+dir_sep+specimen_name+"_"+ROI_name+"_"+"full_size";
 	File.makeDirectory(target_dir_final);
 	
-	run("Image Sequence... ", "format=TIFF save="+target_dir_final+dir_sep+specimen_name+"_"+ROI_name+"_.tif");
+	run("Image Sequence... ", "dir="+target_dir_final+" format=TIFF name="+specimen_name+"_"+ROI_name+"_.tif");
 	
 	print("Stack images saved at "+target_dir_final+".");
 	print("************************************");
@@ -358,13 +358,16 @@ if(perc_d < 100){
 	run("Scale...", "x="+d+" y="+d+" z="+d+" interpolation=Bicubic average process create");
 	getPixelSize(unit_, px_size_new, ph, pd);
 	print("New px size = "+px_size_new+" um.");
-	run("Image Sequence... ", "format=TIFF name="+specimen_name+"_"+ROI_name+"_red"+perc_d+"_ save="+target_dir+dir_sep+specimen_name+"_"+ROI_name+"_red"+perc_d+"_.tif");
+	//run("Image Sequence... ", "format=TIFF name="+specimen_name+"_"+ROI_name+"_red"+perc_d+"_ save="+target_dir+dir_sep+specimen_name+"_"+ROI_name+"_red"+perc_d+"_.tif");
+	run("Image Sequence... ", "dir="+target_dir+" format=TIFF name="+specimen_name+"_"+ROI_name+"_red"+perc_d+"_.tif");
 }
 else{
 	print("No scaling necessary; stack is already smaller than "+d_size+" GB.");
 	px_size_new = px_size;
 	print("************************************");
-	run("Image Sequence... ", "format=TIFF name="+specimen_name+"_"+ROI_name+"_ save="+target_dir+dir_sep+specimen_name+"_"+ROI_name+"_.tif");
+	//run("Image Sequence... ", "format=TIFF name="+specimen_name+"_"+ROI_name+"_ save="+target_dir+dir_sep+specimen_name+"_"+ROI_name+"_.tif");
+	//run("Image Sequence... ", "select="+target_dir+dir_sep+specimen_name+"_"+ROI_name+" dir="+target_dir+dir_sep+specimen_name+"_"+ROI_name+" format=TIFF name=name="+specimen_name+"_"+ROI_name+"_");
+	run("Image Sequence... ", "dir="+target_dir+" format=TIFF name="+specimen_name+"_"+ROI_name+"_.tif");
 }
 print("Stack images saved in: "+target_dir+".");
 print("************************************");
